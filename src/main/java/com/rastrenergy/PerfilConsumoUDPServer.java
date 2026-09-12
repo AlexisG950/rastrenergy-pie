@@ -1,12 +1,13 @@
 package com.rastrenergy;
 
-import org.json.JSONObject;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.Scanner;
+
+import org.json.JSONObject;
 
 public class PerfilConsumoUDPServer {
     public static void main(String[] args) {
@@ -15,7 +16,7 @@ public class PerfilConsumoUDPServer {
         System.out.println("==========================================================");
         System.out.println("  RASTRENERGY - SERVICIO DE PERFIL DE CONSUMO (UDP)       ");
         System.out.println("==========================================================");
-        System.out.print("Puerto de escucha UDP (ej. 5000): ");
+        System.out.print("Puerto de escucha UDP (ej. 5001): ");
         int port = Integer.parseInt(scanner.nextLine().trim());
 
         System.out.print("Host de PostgreSQL (ej. localhost): ");

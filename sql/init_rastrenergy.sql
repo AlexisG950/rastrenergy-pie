@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS lecturas_consumo (
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla para almacenar precios horarios por franja y zona
+
 CREATE TABLE IF NOT EXISTS precios_mercado (
     id SERIAL PRIMARY KEY,
     zona_geografica VARCHAR(50) NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS precios_mercado (
     moneda VARCHAR(10) DEFAULT 'USD'
 );
 
--- Datos de prueba para precios spot
+
 INSERT INTO precios_mercado (zona_geografica, franja_horaria, precio, moneda) VALUES
 ('CENTRAL', '00:00-08:00', 0.0800, 'USD'),
 ('CENTRAL', '08:00-18:00', 0.1600, 'USD'),
