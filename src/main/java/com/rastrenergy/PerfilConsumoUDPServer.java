@@ -5,36 +5,24 @@ import java.net.DatagramSocket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.util.Scanner;
-
 import org.json.JSONObject;
 
 public class PerfilConsumoUDPServer {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        
+        int port = Integer.parseInt(getEnvOrDefault("UDP_PORT", "5001"));
+        String dbHost = getEnvOrDefault("DB_HOST", "localhost");
+        String dbPort = getEnvOrDefault("DB_PORT", "5432");
+        String dbName = getEnvOrDefault("DB_NAME", "rastrenergy_db");
+        String dbUser = getEnvOrDefault("DB_USER", "postgres");
+        String dbPassword = getEnvOrDefault("DB_PASSWORD", "jdgc110346#rg");
+        String dbUrl = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
 
         System.out.println("==========================================================");
         System.out.println("  RASTRENERGY - SERVICIO DE PERFIL DE CONSUMO (UDP)       ");
         System.out.println("==========================================================");
-        System.out.print("Puerto de escucha UDP (ej. 5001): ");
-        int port = Integer.parseInt(scanner.nextLine().trim());
-
-        System.out.print("Host de PostgreSQL (ej. localhost): ");
-        String dbHost = scanner.nextLine().trim();
-
-        System.out.print("Puerto de PostgreSQL (ej. 5432): ");
-        String dbPort = scanner.nextLine().trim();
-
-        System.out.print("Nombre de base de datos (ej. rastrenergy_db): ");
-        String dbName = scanner.nextLine().trim();
-
-        System.out.print("Usuario de PostgreSQL: ");
-        String dbUser = scanner.nextLine().trim();
-
-        System.out.print("Contrasena de PostgreSQL: ");
-        String dbPassword = scanner.nextLine().trim();
-
-        String dbUrl = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
+        System.out.println("Base de datos configurada en: " + dbUrl);
+        System.out.println("Usuario: " + dbUser);
 
         try (DatagramSocket socket = new DatagramSocket(port)) {
             System.out.println("\n[Rastrenergy] Servidor UDP listo en puerto " + port + ". Esperando datagramas...");
@@ -57,7 +45,7 @@ public class PerfilConsumoUDPServer {
 
                     System.out.println("[UDP - Persistido en BD] Medidor: " + json.getString("id_medidor") +
                                        " | Cliente: " + json.getString("id_cliente") +
-                                       " | Lectura: " + json.getDouble("lectura_kWh") + " kWh");
+                                       " | Lectura: " + json.getDouble("lectura_kWh") + " kWh promedio en un dia");
                 } catch (Exception dbEx) {
                     System.err.println("[Error Base de Datos]: " + dbEx.getMessage());
                 }
@@ -65,5 +53,10 @@ public class PerfilConsumoUDPServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static String getEnvOrDefault(String key, String defaultValue) {
+        String value = System.getenv(key);
+        return (value != null && !value.isBlank()) ? value : defaultValue;
     }
 }

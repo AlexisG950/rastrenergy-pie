@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Scanner;
 
 public class PreciosMercadoTCPServer {
     private static String dbUrl;
@@ -19,30 +18,21 @@ public class PreciosMercadoTCPServer {
     private static String dbPassword;
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        // Carga automática desde variables de entorno o valores por defecto
+        int port = Integer.parseInt(getEnvOrDefault("TCP_PORT", "5001"));
+        String dbHost = getEnvOrDefault("DB_HOST", "localhost");
+        String dbPort = getEnvOrDefault("DB_PORT", "5432");
+        String dbName = getEnvOrDefault("DB_NAME", "rastrenergy_db");
+        dbUser = getEnvOrDefault("DB_USER", "postgres");
+        dbPassword = getEnvOrDefault("DB_PASSWORD", "jdgc110346#rg");
+
+        dbUrl = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
 
         System.out.println("==========================================================");
         System.out.println("  RASTRENERGY - CONSULTA DE PRECIOS DE MERCADO (TCP)      ");
         System.out.println("==========================================================");
-        System.out.print("Puerto de escucha TCP (ej. 5001): ");
-        int port = Integer.parseInt(scanner.nextLine().trim());
-
-        System.out.print("Host de PostgreSQL (ej. localhost): ");
-        String dbHost = scanner.nextLine().trim();
-
-        System.out.print("Puerto de PostgreSQL (ej. 5432): ");
-        String dbPort = scanner.nextLine().trim();
-
-        System.out.print("Nombre de base de datos (ej. rastrenergy_db): ");
-        String dbName = scanner.nextLine().trim();
-
-        System.out.print("Usuario de PostgreSQL: ");
-        dbUser = scanner.nextLine().trim();
-
-        System.out.print("Contrasena de PostgreSQL: ");
-        dbPassword = scanner.nextLine().trim();
-
-        dbUrl = "jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName;
+        System.out.println("Base de datos configurada en: " + dbUrl);
+        System.out.println("Usuario: " + dbUser);
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("\n[Rastrenergy] Servidor TCP de Precios escuchando en puerto " + port + "...");
@@ -91,5 +81,10 @@ public class PreciosMercadoTCPServer {
         } catch (Exception e) {
             System.err.println("[Error procesando TCP]: " + e.getMessage());
         }
+    }
+
+    private static String getEnvOrDefault(String key, String defaultValue) {
+        String value = System.getenv(key);
+        return (value != null && !value.isBlank()) ? value : defaultValue;
     }
 }

@@ -9,16 +9,16 @@ import java.util.Scanner;
 
 public class ConsultaTarifasEnergetikClient {
     public static void main(String[] args) {
+        
+        String host = getEnvOrDefault("SERVER_HOST", "localhost");
+        int port = Integer.parseInt(getEnvOrDefault("TCP_PORT", "5002"));
+
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("==========================================================");
         System.out.println("   RASTRENERGY - SERVICIO 2: CLIENTE CONSULTA TARIFAS TCP ");
         System.out.println("==========================================================");
-        System.out.print("Host de Energetik (ej. localhost): ");
-        String host = scanner.nextLine().trim();
-
-        System.out.print("Puerto TCP de Energetik (ej. 5002): ");
-        int port = Integer.parseInt(scanner.nextLine().trim());
+        System.out.println("Destino configurado: " + host + ":" + port);
 
         System.out.print("Categoria de cliente (ej. residencial): ");
         String categoria = scanner.nextLine().trim();
@@ -43,5 +43,10 @@ public class ConsultaTarifasEnergetikClient {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static String getEnvOrDefault(String key, String defaultValue) {
+        String value = System.getenv(key);
+        return (value != null && !value.isBlank()) ? value : defaultValue;
     }
 }
